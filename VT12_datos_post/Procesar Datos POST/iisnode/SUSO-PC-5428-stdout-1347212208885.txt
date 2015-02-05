@@ -1,2 +1,0 @@
-User Posted:
-userinput1=ddd&userinput2=eee

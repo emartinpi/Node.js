@@ -1,12 +1,12 @@
-!!!
+doctype html
 html
   head
     title Node.js Chat Server
     link(rel='stylesheet', href='/stylesheets/style.css')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
     script(src='/socket.io/socket.io.js')
-    script
-      var socket = io.connect();
+    script.
+      var socket = io();
       jQuery(function ($) { 
         var users = $('.users');
         var usersList = $('.users ul');
@@ -101,24 +101,18 @@ html
         });
       });
 
-
-
-
-
-body!= body
-  section.login
-    h1 Servidor de Chat Node.js
-    form
-      input(type='text', id='nickname')
-      button Enviar
-  section.wrapper
-    section.messages
-      a(title='Mostrar usuarios').show <
-    section.users
-      ul
-    section.message-box 
+  body
+    section.login
+      h1 Servidor de Chat Node.js
       form
-        input.message
+        input(type='text', id='nickname')
         button Enviar
-
-
+    section.wrapper
+      section.messages
+        a(title='Mostrar usuarios').show <
+      section.users
+        ul
+      section.message-box 
+        form
+          input.message
+          button Enviar

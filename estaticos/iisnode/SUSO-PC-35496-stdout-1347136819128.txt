@@ -1,3 +1,0 @@
-cargando content/index.html desde archivo
-cargando content/styles.css desde archivo
-cargando content/script.js desde archivo

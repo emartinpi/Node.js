@@ -23,10 +23,10 @@
       <input type="submit" value="Enviar mensaje" />
     </form>
     <section id="messages"></section>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect();
+      var socket = io();
       socket.on('nicknames', function (data) {
         $('#nicknames').empty().append($('<ul>'));
         for(var i=0; i<data.length; i++) {

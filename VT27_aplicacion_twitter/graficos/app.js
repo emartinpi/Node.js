@@ -1,17 +1,19 @@
-var app = require('express').createServer(),
+var app = require('express')(),
     twitter = require('ntwitter'),
-    io = require('socket.io').listen(app),
+    server = app.listen(3000);
+
+var io = require('socket.io')(server),
     madrid = 0,
     barcelona = 0,
     total = 0;
 
-app.listen(3000);
+
 
 var twit = new twitter({
-  consumer_key: 'EQEFL6cU8Qzmtugy4Qwzg',
-  consumer_secret: '4exexzX58HgDX9jmNkBjUoCLeZC5hftiyR38x8T0w0',
-  access_token_key: '995044219-DV0IaiDcGJYK2HVxHUxOUH5EKt3YzjV58f5xxhYo',
-  access_token_secret: '6NDrBqn61aurepCvWQLwXqn1514Wrxl0uveZXUGmGI'
+  consumer_key: 'RCezDItoqJcNsnJpHuZAtDHeU',
+  consumer_secret: '9M0gcpCDnCaSWq5DM9k0CsPQNSM6QeF3szD9KrfUE4rIprLt3C',
+  access_token_key: '195685000-SFEUXwH8bpeoFlGU5bA2pWM3LYpEFNXvRiZDAflP',
+  access_token_secret: 'mY7nBnrO2G9UneC7GXYSmwh03xaQzgMVH95TlOQXDHIkw'
 });
 
 
@@ -26,7 +28,7 @@ twit.stream('statuses/filter', { track: ['madrid', 'barcelona'] }, function(stre
       barcelona++
       total++
     }
-    io.sockets.volatile.emit('tweet', { 
+    io.sockets.emit('tweet', { 
       user: data.user.screen_name, 
       text: data.text,
       madrid: (madrid/total)*100,
@@ -36,6 +38,6 @@ twit.stream('statuses/filter', { track: ['madrid', 'barcelona'] }, function(stre
 });
 
 app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/index.html');
 });
 

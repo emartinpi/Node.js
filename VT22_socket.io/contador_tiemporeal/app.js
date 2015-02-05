@@ -11,7 +11,7 @@ var server = http.createServer(function (req, res) {
 console.log('Servidor funcionando en http://127.0.0.1:3000/');
 
 var io = require('socket.io').listen(server);
-
+io.set('log level', 1);
 io.sockets.on('connection', function (socket) {
   count++;
   console.log('Usuario conectado. ' + count + ' usuario(s) ahora.');

@@ -12,7 +12,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect('http://127.0.0.1:3000');
+      var socket = io('http://127.0.0.1:3000');
       var mensaje = document.getElementById('mensaje');
       $(mensaje.form).submit(function() {
         socket.emit('message', { text: mensaje.value });

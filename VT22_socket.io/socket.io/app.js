@@ -6,7 +6,7 @@ var server = http.createServer(function (req, res) {
       res.writeHead(200, { 'Content-Type': 'text/html' });
       res.end(data, 'utf-8');
     });
-  }).listen(3000, "127.0.0.1");
+  }).listen(3000);
 console.log('Servidor funcionando en http://127.0.0.1:3000/');
 
 var io = require('socket.io').listen(server);

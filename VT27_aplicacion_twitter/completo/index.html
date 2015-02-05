@@ -2,87 +2,192 @@
 <html lang="es">
   <head>
     <meta charset="utf-8">
-    <title>El reto de las ciudades</title>
+    <title>El reto de twitter</title>
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
     <style>
-      body { font: 100% Helvetica, Arial, sans-serif }
-      ul.percentage { width: 100%; float: left}
-      ul.percentage li { display: block; width: 0; padding: 10px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; float: left; clear: left }
-      ul.percentage li.madrid { background: #ff0066; color: #fff}
-      ul.percentage li.barcelona { background: #000; color: #fff}
-      ul.percentage li span { float: right; display: block}
+      * { box-sizing: border-box; }
+      body { font-family: 'Roboto', sans-serif; }
+      .form-control {
+        height: 34px;
+        padding: 6px 12px;
+        font-size: 24px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+      }
+      .form-control:focus {
+        border-color: #66afe9;
+        outline: 0;
+        box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+      }
+      .btn {
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        cursor: pointer;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        color: #333;
+        background-color: #fff;
+        border-color: #ccc;
+        float: right;
+      }
+      .btn:hover {
+        color: #333;
+        background-color: #e6e6e6;
+        border-color: #adadad;
+      }
+
+      section.sctnPercentage { float: left; width: 100%; margin-bottom: 20px; margin-top: 20px }
+      ul.percentage { width: 100%; float: left; padding: 0; margin: 0}
+      ul.percentage li { display: block; width: 0; padding: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; float: left; clear: left }
+      ul.percentage li.track1 { min-width: 10em; background: #ff0066; color: #fff}
+      ul.percentage li.track2 {  min-width: 10em; background: #000; color: #fff}
+      ul.percentage li div { display: inline}
+      ul.percentage li span { float: right}
       ul.tweets { float: left; clear: both}
       #stream { float: left; clear: both; width: 100%}
-      #stream ul { list-style: none}
-      #stream ul li { float: left; clear: left; width: 100%; border-bottom: 1px solid #ccc;: 5px; padding: 5px 0}
+      #stream ul { list-style: none; padding-left: 20px}
+      #stream ul li { font-size: 0.95em; float: left; clear: left; width: 100%; border-bottom: 1px solid #ccc}
       #stream ul li:nth-child(even) { background: #f8f5f6; }
       #stream ul li img { float: left; margin-right: 10px; padding: 5px}
-      #madridrs { width: 45%; float: left }
-      #barcelonars { width: 45%; float: right }
+      #track1Section { width: 50%; float: left }
+      #track2Section { width: 50%; float: right }
+      .frc {height: 36px; width: 40px; float: right; margin-left: 10px; font-size: 13px}
     </style>
   </head>
   <body>
-    <h1>El reto de las ciudades</h1>
-    <ul class="percentage">
-      <li class="madrid">
-        Madrid
-        <span>0</span>
-      </li>
-      <li class="barcelona">
-        Barcelona
-        <span>0</span>
-      </li>
-    </ul>
+    <h1 style="display:inline">El reto de twitter</h1>
+    <input id="frc" type="text" class="form-control frc">
+    <button type="button" id="disconnect" class="btn">Disconnect</button>
+    <button type="button" id="connect" class="btn">Connect</button>
+    <section class="sctnPercentage">    
+      <ul class="percentage">
+        <li class="track1">
+          <div></div>
+          <span>0</span>
+        </li>
+        <li class="track2">
+          <div></div>
+          <span>0</span>
+        </li>
+      </ul>
+    </section>
     <section id="stream">
-      <section id="madridrs">
-        <h2>Hablan de Madrid</h2>
+      <section id="track1Section">
+        <h2 style="display:inline">Hablan de <span></span></h2>
+        <input id="input1" type="text" class="form-control">
         <ul></ul>
       </section>
-      <section id="barcelonars">
-        <h2>Hablan de Barcelona</h2>
+      <section id="track2Section">
+        <h2 style="display:inline">Hablan de <span></span></h2>
+        <input id="input2" type="text" class="form-control">
         <ul></ul>
       </section>
     </section>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect();
+      var socket = io();
       jQuery(function ($) { 
-        var madridCounter = $('li.madrid'),
-            barcelonaCounter = $('li.barcelona'),
-            madridCounterPercentage = $('li.madrid span'),
-            barcelonaCounterPercentage = $('li.barcelona span'),
-            madridrsList = $('#madridrs ul'),
-            barcelonarsList = $('#barcelonars ul');
-        socket.on('percentages', function (data) {
-          madridCounter
-            .css("width", data.madrid + '%');
-          madridCounterPercentage
-            .text(Math.round(data.madrid * 10) / 10 + '%');
-          barcelonaCounter
-            .css("width", data.barcelona + '%');
-          barcelonaCounterPercentage
-            .text(Math.round(data.barcelona * 10) / 10 + '%');
-        });
-        socket.on('madridr', function (data) {
+        var track1Counter = $('li.track1'),
+            track2Counter = $('li.track2'),
+            track1CounterPercentage = $('li.track1 span'),
+            track2CounterPercentage = $('li.track2 span'),
+            track1List = $('#track1Section ul'),
+            track2List = $('#track2Section ul');
+            $('ul.percentage').hide();
+            $('#disconnect').hide();
+
+        socket.on('track1_twit', function (data) {
           $('<img />')
             .attr('src', data.avatar)
             .load(function(){
-              madridrsList
+              track1List
                 .prepend($('<li>')
                 .prepend($('<p>').text(data.user + ': ' + data.text))
                 .prepend($(this)));
+              $('#track1Section').show();
+              updatePercentages(data.percentages);
             });
         });
-        socket.on('barcelonar', function (data) {
+
+        socket.on('track2_twit', function (data) {
           $('<img />')
             .attr('src', data.avatar)
             .load(function(){
-              barcelonarsList
+              track2List
                 .prepend($('<li>')
                 .prepend($('<p>').text(data.user + ': ' + data.text))
                 .prepend($(this)));
+              $('#track2Section').show();
+              updatePercentages(data.percentages);
             });
         });
+
+        socket.on('disconnect', function(){
+          console.log('disconnect');
+        });
+
+        socket.on('reconnect', function(){
+           console.log('reconnect');
+        });
+
+        function updatePercentages (percentages) {
+          if ($('ul.percentage').is(':hidden')){
+              $('ul.percentage').show();
+          }
+          track1Counter
+            .css("width", percentages.track1 + '%');
+          track1CounterPercentage
+            .text(Math.round(percentages.track1 * 10) / 10 + '%');
+          track2Counter
+            .css("width", percentages.track2 + '%');
+          track2CounterPercentage
+            .text(Math.round(percentages.track2 * 10) / 10 + '%');
+        }
+
+        $('#disconnect').click(function(){
+          socket.close();
+          $('#disconnect').hide();
+          $('#connect').show();
+          $('#input1').show().val(''); 
+          $('#input2').show().val(''); 
+          $('#track1Section > h2 > span').hide();
+          $('#track2Section > h2 > span').hide();
+        });
+
+        $('#connect').click(function(){
+          if($('#input1').val() && $('#input2').val()){
+            track1List.empty();
+            track2List.empty();
+            $('#connect').hide();
+            $('#disconnect').show();
+            $('#track1Section > h2 > span').show().text($('#input1').val());
+            $('#track2Section > h2 > span').show().text($('#input2').val());
+            $('#input1').hide(); 
+            $('#input2').hide();
+            $('.track1 div').text($('#input1').val());
+            $('.track2 div').text($('#input2').val());
+            $.ajax({
+              type: "GET",
+              url: "track",
+              data: {
+                trk1: $('#input1').val(),
+                trk2: $('#input2').val(),
+                frc: $('#frc').val() ? $('#frc').val() : 1
+              }
+            }).done(function() {
+              socket.open();
+            });
+          }
+        });
+
       });
     </script>
   </body>

@@ -10,7 +10,7 @@
     <p id="count"></p>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect('http://127.0.0.1:3000');
+      var socket = io('http://127.0.0.1:3000');
       var count = document.getElementById('count');
       socket.on('users', function (data) {
         console.log('Actualizando desde el Servidor');
