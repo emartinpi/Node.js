@@ -9,7 +9,7 @@ var servidor = http.createServer(function (req, res) {
 }).listen(3000, "127.0.0.1");
 console.log('Servidor ejecutándose en http://127.0.0.1:3000/');
 
-var io = require('socket.io').listen(servidor);
+var io = require('socket.io')(servidor);
 
 io.sockets.on('connection', function (socket) {
   socket.on('message', function (data) {

@@ -7,9 +7,11 @@ var server = http.createServer(function (req, res) {
       res.end(data, 'utf-8');
     });
   }).listen(3000);
-console.log('Servidor funcionando en http://127.0.0.1:3000/');
 
-var io = require('socket.io').listen(server);
+
+console.log('Servidor funcionando en http://%s:%d/', 'localhost', server.address().port);
+
+var io = require('socket.io')(server);
 
 io.sockets.on('connection', function (socket) {
   console.log('Usuario conectado');
